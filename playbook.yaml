@@ -1,0 +1,7 @@
+---
+- name: Bare Metal Provisioning
+  hosts: localhost
+  connection: local # Use local connection for this play
+  roles:
+    - networking
+  gather_facts: yes
