@@ -1,0 +1,12 @@
+- name: dm0_service
+  ansible.builtin.service:
+    name: create-dm0.service
+    state: restarted
+  when: not ansible_check_mode
+
+- name: start netplan
+  ansible.builtin.command:
+    cmd: netplan apply
+  when: not ansible_check_mode
+  
+  

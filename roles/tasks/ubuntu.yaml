@@ -1,0 +1,22 @@
+- name: Copy create-dm0 service file
+  ansible.builtin.copy:
+    src: create-dm0.service
+    dest: /etc/systemd/system/create-dm0.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - dm0_service
+  when: not ansible_check_mode
+
+- name: Configure netplan for Ubuntu
+  ansible.builtin.template:
+    src: netplan.yaml.j2
+    dest: /etc/netplan/50-dummy.yaml
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - start netplan
+  when: not ansible_check_mode
+

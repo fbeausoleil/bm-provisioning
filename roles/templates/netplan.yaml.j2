@@ -1,0 +1,8 @@
+network:
+   version:2
+   ethernets:
+       dm0:
+           addresses:
+        {% for address in anycast_ips%}
+            - {{address}}
+        {% endfor %}

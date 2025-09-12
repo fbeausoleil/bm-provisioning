@@ -8,25 +8,25 @@ This is a bare metal provisioning playground repository for experimenting with a
 
 ## Development Environment
 
-This is a new repository with minimal setup. The following commands and structure are anticipated based on typical bare metal provisioning projects:
+This repository uses Ansible for bare metal server configuration and network management.
 
 ### Common Commands
 
 ```bash
-# Initialize and set up the development environment (when implemented)
-make setup
+# Run ansible playbook against inventory
+ansible-playbook -i inventory playbook.yml
 
-# Run tests (when implemented)
-make test
+# Check ansible syntax
+ansible-playbook --syntax-check playbook.yml
 
-# Build deployment artifacts (when implemented)  
-make build
+# Run in check mode (dry run)
+ansible-playbook -i inventory playbook.yml --check
 
-# Deploy to test environment (when implemented)
-make deploy-test
+# Run specific tags
+ansible-playbook -i inventory playbook.yml --tags networking
 
-# Clean build artifacts (when implemented)
-make clean
+# Test connectivity to hosts
+ansible all -i inventory -m ping
 ```
 
 ### Git Workflow
@@ -42,24 +42,32 @@ git --no-pager log --oneline -10
 git --no-pager diff
 ```
 
-## Expected Architecture
+## Architecture
 
-Based on the project name, this repository likely will contain:
+This repository contains Ansible roles for bare metal server network configuration:
 
-- **Infrastructure as Code**: Terraform, Ansible, or similar tools for server provisioning
-- **Configuration Management**: Scripts and playbooks for automated server setup
-- **Deployment Scripts**: Automation for deploying applications to bare metal
-- **Monitoring/Observability**: Tools for tracking provisioned infrastructure
-- **Testing Framework**: Integration tests for deployment workflows
+### roles/
+- **Network Configuration**: Creates dummy network interfaces (dm0) for anycast IP management
+- **Ubuntu Support**: Configures netplan for Ubuntu systems using Jinja2 templates
+- **Service Management**: Manages systemd services for network interface lifecycle
+- **Handler Integration**: Automatic service restarts and netplan application
+
+### Key Files
+- `roles/tasks/main.yaml` - Main task orchestration with Ubuntu detection
+- `roles/tasks/ubuntu.yaml` - Ubuntu-specific network configuration tasks
+- `roles/handlers/main.yaml` - Service restart and netplan handlers
+- `roles/templates/netplan.yaml.j2` - Dynamic netplan configuration template
+- `roles/files/create-dm0.service` - Systemd service for dummy interface creation
 
 ## Key Considerations
 
-- Bare metal provisioning typically involves network booting (PXE), DHCP configuration, and OS installation automation
-- Infrastructure state management and idempotency are critical
-- Security considerations for automated access to physical hardware
-- Network configuration and VLAN management may be involved
-- IPMI/BMC integration for hardware management
+- **Ansible Idempotency**: All tasks use `when: not ansible_check_mode` to ensure safe execution
+- **Ubuntu-Specific**: Current implementation targets Ubuntu systems with netplan
+- **Dummy Interfaces**: Uses Linux dummy network interfaces for anycast IP configuration
+- **Systemd Integration**: Leverages systemd for service lifecycle management
+- **Template-Driven**: Network configuration uses Jinja2 templates with `anycast_ips` variable
+- **Handler Automation**: Changes automatically trigger service restarts and netplan application
 
 ## Repository Status
 
-This repository is currently in initial setup phase with only a README.md file. The codebase structure and tooling will emerge as development progresses.
+Active development with Ansible roles for network configuration. The repository contains working roles for Ubuntu bare metal network setup with dummy interface management.
