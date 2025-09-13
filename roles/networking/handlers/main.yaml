@@ -2,6 +2,7 @@
   ansible.builtin.service:
     name: create-dm0.service
     state: restarted
+    enabled: true
   when: not ansible_check_mode
 
 - name: start netplan
