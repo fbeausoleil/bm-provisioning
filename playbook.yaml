@@ -3,5 +3,6 @@
   hosts: localhost
   connection: local # Use local connection for this play
   roles:
+    - base
     - networking
   gather_facts: yes

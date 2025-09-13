@@ -1,0 +1,6 @@
+---
+- name: Execute base tasks for ubuntu
+  ansible.builtin.import_tasks: ubuntu.yaml
+  when: ansible_distribution == "Ubuntu"
+  tags: 
+    - base
