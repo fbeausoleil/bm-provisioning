@@ -13,20 +13,17 @@ This repository uses Ansible for bare metal server configuration and network man
 ### Common Commands
 
 ```bash
-# Run ansible playbook against inventory
-ansible-playbook -i inventory playbook.yml
+# Run ansible playbook (executes locally)
+ansible-playbook playbook.yaml
 
 # Check ansible syntax
-ansible-playbook --syntax-check playbook.yml
+ansible-playbook --syntax-check playbook.yaml
 
 # Run in check mode (dry run)
-ansible-playbook -i inventory playbook.yml --check
+ansible-playbook playbook.yaml --check
 
 # Run specific tags
-ansible-playbook -i inventory playbook.yml --tags networking
-
-# Test connectivity to hosts
-ansible all -i inventory -m ping
+ansible-playbook playbook.yaml --tags networking
 ```
 
 ### Git Workflow
@@ -46,18 +43,22 @@ git --no-pager diff
 
 This repository contains Ansible roles for bare metal server network configuration:
 
-### roles/
+### Core Files
+- `playbook.yaml` - Main Ansible playbook that executes locally
+- `group_vars/all.yaml` - Configuration variables including anycast IPs
+
+### roles/networking/
 - **Network Configuration**: Creates dummy network interfaces (dm0) for anycast IP management
 - **Ubuntu Support**: Configures netplan for Ubuntu systems using Jinja2 templates
 - **Service Management**: Manages systemd services for network interface lifecycle
 - **Handler Integration**: Automatic service restarts and netplan application
 
 ### Key Files
-- `roles/tasks/main.yaml` - Main task orchestration with Ubuntu detection
-- `roles/tasks/ubuntu.yaml` - Ubuntu-specific network configuration tasks
-- `roles/handlers/main.yaml` - Service restart and netplan handlers
-- `roles/templates/netplan.yaml.j2` - Dynamic netplan configuration template
-- `roles/files/create-dm0.service` - Systemd service for dummy interface creation
+- `roles/networking/tasks/main.yaml` - Main task orchestration with Ubuntu detection
+- `roles/networking/tasks/ubuntu.yaml` - Ubuntu-specific network configuration tasks
+- `roles/networking/handlers/main.yaml` - Service restart and netplan handlers
+- `roles/networking/templates/netplan.yaml.j2` - Dynamic netplan configuration template
+- `roles/networking/files/create-dm0.service` - Systemd service for dummy interface creation
 
 ## Key Considerations
 

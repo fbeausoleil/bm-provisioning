@@ -1,14 +1,44 @@
 # bm-provisioning
 Bare metal provisioning playground
 
+An Ansible-based project for configuring dummy network interfaces on Ubuntu systems for anycast IP management.
+
+## Usage
+
+```bash
+# Run the playbook locally
+ansible-playbook playbook.yaml
+
+# Run in check mode (dry run)
+ansible-playbook playbook.yaml --check
+
+# Run with specific tags
+ansible-playbook playbook.yaml --tags networking
+```
+
+## Configuration
+
+Edit `group_vars/all.yaml` to customize the anycast IP addresses:
+
+```yaml
+anycast_ips:
+  - 192.168.100.1/32
+  - 192.168.100.2/32
+```
+
 ## Structure
 
-### roles/
-Contains Ansible roles for bare metal server configuration:
+### Core Files
+- `playbook.yaml` - Main Ansible playbook for bare metal provisioning
+- `group_vars/all.yaml` - Configuration variables including anycast IPs
 
-- **Network Configuration**: Sets up dummy network interfaces (dm0) for anycast IP management
-- **Ubuntu Support**: Configures netplan for Ubuntu systems
-- **Service Management**: Creates systemd services for network interface management
+### roles/networking/
+Ansible role for network interface configuration:
+
+- **Network Configuration**: Creates dummy network interfaces (dm0) for anycast IP management
+- **Ubuntu Support**: Configures netplan for Ubuntu systems using Jinja2 templates
+- **Service Management**: Manages systemd services for network interface lifecycle
+- **Handler Integration**: Automatic service restarts and netplan application
 
 #### Key Components
 - `tasks/` - Ansible tasks for Ubuntu network configuration
